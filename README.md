@@ -35,25 +35,94 @@ Antigravity converts life decisions into **measurable simulations**. It runs 10,
 - **Premium Dashboard** — Probability cone charts, stress trajectories, radar charts, risk breakdowns
 - **Decision Comparison** — Compare up to 4 decisions side by side
 
+## Prerequisites
+
+- **Python 3.11+** — [Download](https://www.python.org/downloads/)
+- **Node.js 18+** — [Download](https://nodejs.org/)
+- **Git** — [Download](https://git-scm.com/)
+
 ## Quick Start
 
-### Frontend (runs standalone with demo simulation)
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/mayurbangera/altpath.git
+cd altpath
+```
+
+### 2. Backend Setup
+
+```bash
+cd backend
+
+# Create a virtual environment
+python -m venv venv
+
+# Activate the virtual environment
+# Windows (PowerShell):
+.\venv\Scripts\Activate.ps1
+# Windows (CMD):
+.\venv\Scripts\activate.bat
+# macOS/Linux:
+source venv/bin/activate
+
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Download the spaCy NLP model (required)
+python -m spacy download en_core_web_sm
+
+# Create environment file
+cp ../.env.example .env
+# Or on Windows CMD: copy ..\.env.example .env
+```
+
+### 3. Frontend Setup
 
 ```bash
 cd frontend
 npm install
+```
+
+### 4. Run the Application
+
+Open **two terminals**:
+
+**Terminal 1 — Backend** (port 8000):
+```bash
+cd backend
+.\venv\Scripts\Activate.ps1   # or source venv/bin/activate on Mac/Linux
+uvicorn app.main:app --reload --port 8000
+# → http://localhost:8000/docs  (API documentation)
+# → http://localhost:8000/health (Health check)
+```
+
+**Terminal 2 — Frontend** (port 3000):
+```bash
+cd frontend
 npm run dev
 # → http://localhost:3000
 ```
 
-### Backend (with full simulation engine)
+### 5. Verify Everything Works
 
-```bash
-cd backend
-pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
-# → http://localhost:8000/docs
-```
+- **Frontend**: Open [http://localhost:3000](http://localhost:3000) — you should see the AltPath landing page
+- **Backend API Docs**: Open [http://localhost:8000/docs](http://localhost:8000/docs) — interactive Swagger UI
+- **Health Check**: Open [http://localhost:8000/health](http://localhost:8000/health) — should return `{"status":"healthy"}`
+
+### Environment Variables
+
+The `.env` file (copied from `.env.example`) contains configuration for:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DATABASE_URL` | `postgresql+asyncpg://...` | PostgreSQL connection (optional for demo) |
+| `REDIS_URL` | `redis://localhost:6379/0` | Redis connection (optional) |
+| `OLLAMA_BASE_URL` | `http://localhost:11434` | Ollama LLM server (optional) |
+| `OLLAMA_MODEL` | `llama3` | LLM model name |
+| `MONTE_CARLO_DEFAULT_RUNS` | `10000` | Default simulation runs |
+
+> **Note:** The backend runs in demo/standalone mode without PostgreSQL, Redis, or Ollama. These are optional for enhanced functionality.
 
 ## Tech Stack
 
