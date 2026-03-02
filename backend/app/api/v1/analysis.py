@@ -31,6 +31,11 @@ class InterventionRequest(BaseModel):
     propagation_months: int = Field(12, ge=1, le=60)
 
 
+class ScenarioRequest(BaseModel):
+    state: UserState
+    decision: DecisionDelta
+
+
 @router.post("/causal/paths")
 async def get_causal_paths(req: CausalPathRequest):
     """Find all causal paths between two life dimensions."""
@@ -123,10 +128,6 @@ async def get_graph():
 
 
 # ── Scenario Branching ───────────────────────────────────────
-
-class ScenarioRequest(BaseModel):
-    state: UserState
-    decision: DecisionDelta
 
 
 @router.post("/scenarios/tree", response_model=ScenarioTree)
